@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Canva App
 
 Welcome to your Canva App! 🎉
