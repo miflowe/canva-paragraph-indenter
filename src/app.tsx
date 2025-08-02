@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Rows, Text, NumberInput } from "@canva/app-ui-kit";
+import { Button, Rows, Text, NumberInput, Box } from "@canva/app-ui-kit";
 import { requestOpenExternalUrl } from "@canva/platform";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as styles from "styles/components.css";
@@ -17,8 +17,39 @@ export const App = () => {
   const [paragraphSpacing, setParagraphSpacing] = React.useState(1);
   const [errorMessage, setErrorMessage] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
+  const [previewText, setPreviewText] = React.useState("");
   const currentSelection = useSelection("plaintext");
   const isElementSelected = currentSelection.count == 1;
+
+  // Auto-update preview whenever inputs or selection change
+  /*React.useEffect(() => {
+    async function updatePreviewText() {
+      if (currentSelection.count !== 1) {
+        setPreviewText("");
+        return;
+      }
+
+      const draft = await currentSelection.read();
+      const rawText = draft.contents.map((a) => a.text).join("");
+
+      const paragraphs = rawText.split("\n");
+      const nonEmptyParagraphs = paragraphs.filter((p) => p !== "");
+
+      const spacedParagraphs = nonEmptyParagraphs.map((p) => {
+        return p.trim() + "\n".repeat(paragraphSpacing);
+      });
+
+      const indentedParagraphs = spacedParagraphs.map((p) => {
+        return " ".repeat(indentSize) + p.trimStart();
+      });
+
+      const indentedText = indentedParagraphs.join("\n");
+      setPreviewText(indentedText);
+    }
+
+    updatePreviewText();
+  }, [indentSize, paragraphSpacing, currentSelection]);
+  */
 
   async function handleIndentParagraphs() {
 
@@ -71,10 +102,13 @@ export const App = () => {
 
   };
 
+  //const visibleIndentedText = previewText
+  //  .replace(/^ +/gm, (match) => '\u00A0'.repeat(match.length));
+
   return (
     <div className={styles.scrollContainer}>
       <Rows spacing="2u">
-        <Text>
+        <Text variant="bold">
           <FormattedMessage
             defaultMessage="
               Indent size
@@ -108,10 +142,10 @@ export const App = () => {
         />
 
 
-        <Text>
+        <Text variant="bold">
           <FormattedMessage
             defaultMessage="
-              Spacing Size
+              Spacing size
             "
             description="Instructions for using the Canva Paragraph Indenter app."
             values={{
@@ -140,12 +174,35 @@ export const App = () => {
           })}
           step={1}
         />
-
+         {/*
+        <Text variant="bold">
+          <FormattedMessage
+            defaultMessage="
+              Text Preview
+            "
+            description="Instructions for using the Canva Paragraph Indenter app."
+            values={{
+              code: (chunks) => <code>{chunks}</code>,
+            }}
+          />
+        </Text>
+        <Box
+          background="neutralLow"
+          borderRadius="large"
+          padding="2u"
+        >
+          <Text 
+            alignment="inherit"
+          >
+            {visibleIndentedText || "No text selected for preview."}
+          </Text>
+        </Box>
+        */}
 
         <Button
           alignment="center"
           ariaLabel={intl.formatMessage({
-            defaultMessage: "Indent Paragraphs",
+            defaultMessage: "Fix Paragraphs",
             description: ""
           })}
           disabled = {currentSelection.count !=1}
@@ -153,7 +210,7 @@ export const App = () => {
           onClick={handleIndentParagraphs}
           variant="primary"
         >{intl.formatMessage({
-          defaultMessage: "Indent Paragraphs",
+          defaultMessage: "Fix Paragraphs",
           description: ""
         })}
         </Button>
