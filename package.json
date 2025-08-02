@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@canva/app-i18n-kit": "^1.0.2",
-    "@canva/app-ui-kit": "^4.8.0",
+    "@canva/app-ui-kit": "^4.10.0",
     "@canva/asset": "^2.2.0",
     "@canva/design": "^2.4.0",
     "@canva/error": "^2.1.0",
@@ -33,8 +33,8 @@
     "react-intl": "6.8.7"
   },
   "devDependencies": {
-    "@canva/cli": ">= 0.0.1-beta.13 < 0.0.2",
     "@canva/app-eslint-plugin": "^1.0.0-beta.3",
+    "@canva/cli": ">= 0.0.1-beta.13 < 0.0.2",
     "@formatjs/cli": "6.3.15",
     "@formatjs/ts-transformer": "3.13.27",
     "@ngrok/ngrok": "1.4.1",
