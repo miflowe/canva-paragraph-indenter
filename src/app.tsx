@@ -14,6 +14,7 @@ export const App = () => {
   const intl = useIntl();
   const [loading, setIsLoading] = React.useState(false);
   const [indentSize, setIndentSize] = React.useState(5);
+  const [paragraphSpacing, setParagraphSpacing] = React.useState(0);
   const [errorMessage, setErrorMessage] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
   const currentSelection = useSelection("plaintext");
@@ -42,7 +43,8 @@ export const App = () => {
       return " ".repeat(indentSize) + trimmed;
     });
 
-    const indentedText = indentedParagraphs.join("\n");
+    const separator = "\n".repeat(1 + paragraphSpacing);
+    const indentedText = indentedParagraphs.join(separator);
 
     draft.contents = [{ text: indentedText }];
     try {
