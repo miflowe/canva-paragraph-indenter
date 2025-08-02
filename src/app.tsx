@@ -14,7 +14,7 @@ export const App = () => {
   const intl = useIntl();
   const [loading, setIsLoading] = React.useState(false);
   const [indentSize, setIndentSize] = React.useState(5);
-  const [paragraphSpacing, setParagraphSpacing] = React.useState(0);
+  const [paragraphSpacing, setParagraphSpacing] = React.useState(1);
   const [errorMessage, setErrorMessage] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
   const currentSelection = useSelection("plaintext");
@@ -36,15 +36,26 @@ export const App = () => {
 
     const paragraphs = rawText.split("\n");
 
-    const indentedParagraphs = paragraphs.map((p) => {
-      // Remove existing spaces at start (nice UX!)
+    // Filter empty lines
+    const nonEmptyParagraphs = paragraphs.filter((p) => {
+      return p !== ""
+    });
+
+    const spacedParagraphs = nonEmptyParagraphs.map((p) => {
+      // Remove existing spaces everywhere
+      const trimAll = p.trim();
+      // Add # of /n to end of paragraph
+      return trimAll + "\n".repeat(paragraphSpacing);
+    });
+
+    const indentedParagraphs = spacedParagraphs.map((p) => {
+      // Remove existing spaces at start
       const trimmed = p.trimStart();
-      // Add 4 spaces
+      // Add # of spaces to beginning of paragraph
       return " ".repeat(indentSize) + trimmed;
     });
 
-    const separator = "\n".repeat(1 + paragraphSpacing);
-    const indentedText = indentedParagraphs.join(separator);
+    const indentedText = indentedParagraphs.join("\n");
 
     draft.contents = [{ text: indentedText }];
     try {
@@ -66,7 +77,7 @@ export const App = () => {
         <Text>
           <FormattedMessage
             defaultMessage="
-              Select a textbox, choose your indent size, and click to format your text.
+              Indent size
             "
             description="Instructions for using the Canva Paragraph Indenter app."
             values={{
@@ -95,6 +106,42 @@ export const App = () => {
           })}
           step={1}
         />
+
+
+        <Text>
+          <FormattedMessage
+            defaultMessage="
+              Spacing Size
+            "
+            description="Instructions for using the Canva Paragraph Indenter app."
+            values={{
+              code: (chunks) => <code>{chunks}</code>,
+            }}
+          />
+        </Text>
+        <NumberInput
+          value={paragraphSpacing}
+          onChange={(value) => {
+            if (typeof value === "number") {
+              setParagraphSpacing(value);
+            }
+          }}          
+          defaultValue={5}
+          hasSpinButtons
+          decrementAriaLabel={intl.formatMessage({ defaultMessage: "Decrease spacing", description: "" })}
+          incrementAriaLabel={intl.formatMessage({ defaultMessage: "Increase spacing", description: "" })}
+          max={50}
+          maxLength={2}
+          maximumFractionDigits={0}
+          min={0}
+          placeholder={intl.formatMessage({
+            defaultMessage: "Please enter a value between 0-50",
+            description: ""
+          })}
+          step={1}
+        />
+
+
         <Button
           alignment="center"
           ariaLabel={intl.formatMessage({
