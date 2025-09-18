@@ -63,8 +63,8 @@ npm install
 Start the dev server:
 ```
 npm run
-This usually serves the app at something like http://localhost:8080 (check your terminal output).
 ```
+This usually serves the app at something like http://localhost:8080 (check your terminal output).
 
 ---
 
